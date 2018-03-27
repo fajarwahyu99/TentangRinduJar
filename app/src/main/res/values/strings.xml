@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">DatabaseMovieJar</string>
+    <string name="network_connection_error_message">Network unavailable, please check your network connection!</string>
+    <string name="movie_title">Movie Title</string>
+    <string name="movie_overview">Movie Overview</string>
+    <string name="movie_release_date">Movie Release Date</string>
+    <string name="movie_rating">Movie Rating</string>
+    <string name="nowplaying_movie">Now Playing</string>
+    <string name="upcoming_movie">Up Coming</string>
+    <string name="menu_moviefavorite">My Favorites Movie</string>
+    <string name="menu_share">Share</string>
+    <string name="movie_review">Reviews</string>
+    <string name="review_content">Review Content</string>
+    <string name="empty_review_content">Sorry, there was no review found!</string>
+    <string name="add_favorite_fail_message">Problem with adding movie to your favorite.</string>
+    <string name="add_favorite_success_message">Movie Saved to your Favorite.</string>
+</resources>

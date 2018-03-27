@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.android.popularmovies.MovieDetailActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="270dp"
+                android:layout_marginTop="5dp">
+
+                <ImageView
+                    android:id="@+id/movieImageView"
+                    android:layout_width="180dp"
+                    android:layout_height="match_parent"
+                    android:paddingLeft="5dp" />
+
+                <TextView
+                    android:id="@+id/movieTitleTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_toRightOf="@+id/movieImageView"
+                    android:textSize="20sp"
+                    tools:text="@string/movie_title" />
+
+                <TextView
+                    android:id="@+id/movieRatingTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/movieTitleTextView"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_toRightOf="@+id/movieImageView"
+                    android:textSize="16sp"
+                    tools:text="@string/movie_rating" />
+
+                <TextView
+                    android:id="@+id/movieRelaseDateTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/movieRatingTextView"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_toRightOf="@+id/movieImageView"
+                    android:textSize="16sp"
+                    tools:text="@string/movie_release_date" />
+
+                <ImageButton
+                    android:id="@+id/favoriteButton"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginRight="16dp"
+                    android:background="@drawable/favorite_button_circle"
+                    android:src="@drawable/favorite_white_24px" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/movieOverviewTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="16sp"
+                tools:text="@string/movie_overview" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@color/colorPrimary"
+                android:gravity="center_horizontal"
+                android:text="@string/movie_review"
+                android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+                android:textColor="@color/white" />
+
+            <include layout="@layout/review_child_view" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</layout>

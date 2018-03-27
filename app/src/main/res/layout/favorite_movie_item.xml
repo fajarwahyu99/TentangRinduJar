@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.example.android.popularmovies.FavoriteMoviesActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:layout_marginTop="2dp">
+
+        <ImageView
+            android:id="@+id/favoriteMovieImageView"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:paddingLeft="5dp" />
+
+        <TextView
+            android:id="@+id/favoriteMovieTitleTextView"
+            style="@style/MovieDetailsStyle"
+            android:textSize="20sp"
+            tools:text="@string/movie_title" />
+
+        <TextView
+            android:id="@+id/favoriteMovieRatingTextView"
+            style="@style/MovieDetailsStyle"
+            android:layout_below="@+id/favoriteMovieTitleTextView"
+            android:textSize="16sp"
+            tools:text="@string/movie_rating" />
+
+        <TextView
+            android:id="@+id/favoriteMovieReleaseDateTextView"
+            style="@style/MovieDetailsStyle"
+            android:layout_below="@+id/favoriteMovieRatingTextView"
+            android:textSize="16sp"
+            tools:text="@string/movie_release_date" />
+
+        <TextView
+            android:id="@+id/favoriteMovieOverviewTextView"
+            style="@style/MovieDetailsStyle"
+            android:layout_below="@+id/favoriteMovieReleaseDateTextView"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textSize="16sp"
+            tools:text="@string/movie_overview" />
+
+    </RelativeLayout>
+
+</LinearLayout>
+
+

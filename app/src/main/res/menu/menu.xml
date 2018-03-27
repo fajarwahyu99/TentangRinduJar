@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_now_playing"
+        android:orderInCategory="1"
+        android:title="@string/nowplaying_movie"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_up_coming"
+        android:orderInCategory="2"
+        android:title="@string/upcoming_movie"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_bahasa"
+        android:orderInCategory="4"
+        android:title="Language Settings"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_favorite"
+        android:icon="@drawable/favorite_white_24px"
+        android:orderInCategory="3"
+        android:title="@string/menu_moviefavorite"
+        app:showAsAction="always" />
+
+
+</menu>

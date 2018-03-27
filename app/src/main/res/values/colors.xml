@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#2dc628</color>
+    <color name="colorPrimaryDark">#52b71c</color>
+    <color name="colorAccent">#5dff40</color>
+    <color name="childViewTextColor">#757575</color>
+    <color name="white">#ffffff</color>
+</resources>

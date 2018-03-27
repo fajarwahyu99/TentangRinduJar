@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+     <string name = "app_name"> DatabaseMovieJar </string>
+        <string name = "network_connection_error_message"> Jaringan tidak tersedia, periksa koneksi jaringan Anda! </string>
+        <string name = "movie_title"> Judul Film </string>
+        <string name = "movie_overview"> Ikhtisar Film </string>
+        <string name = "movie_release_date"> Tanggal Peluncuran Film </string>
+        <string name = "movie_rating"> Peringkat Film </string>
+        <string name = "nowplaying_movie"> Sekarang Diputar </string>
+        <string name = "coming_movie"> Sampai Datang </string>
+        <string name = "menu_moviefavorite"> Film Favorit Saya </string>
+        <string name = "menu_share"> Bagikan </string>
+        <string name = "movie_review"> Ulasan </string>
+        <string name = "review_content"> Tinjau Konten </string>
+        <string name = "empty_review_content"> Maaf, tidak ada ulasan yang ditemukan! </string>
+        <string name = "add_favorite_fail_message"> Masalah dengan menambahkan film ke favorit Anda. </string>
+        <string name = "add_favorite_success_message"> Film Disimpan ke Favorit Anda. </string>
+
+</resources>
