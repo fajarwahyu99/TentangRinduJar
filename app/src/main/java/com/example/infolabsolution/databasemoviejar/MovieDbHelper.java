@@ -8,11 +8,10 @@ import com.example.infolabsolution.databasemoviejar.MovieContract.MovieEntry;
 
 public class MovieDbHelper extends SQLiteOpenHelper {
 
-    private static final String DATABASE_NAME = "moviefilm.db";
     private static final int DATABASE_VERSION = 5;
 
     public MovieDbHelper(Context context) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        super(context, BuildConfig.DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     @Override

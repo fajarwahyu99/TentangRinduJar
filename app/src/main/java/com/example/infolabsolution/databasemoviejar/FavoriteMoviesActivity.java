@@ -10,30 +10,30 @@ import com.squareup.picasso.Picasso;
 
 public class FavoriteMoviesActivity extends AppCompatActivity{
 
-    public Intent mIntentFromFavoriteMovieGridView;
     public ActivityFavoriteMoviesBinding mBinding;
+    public Intent favoritesGridView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favorite_movies);
-        mIntentFromFavoriteMovieGridView = getIntent();
+        favoritesGridView = getIntent();
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_favorite_movies);
 
-        if (mIntentFromFavoriteMovieGridView.hasExtra("image")) {
-            Picasso.with(this).load(mIntentFromFavoriteMovieGridView.getStringExtra("image")).into(mBinding.favoriteImageView);
+        if (favoritesGridView.hasExtra("image")) {
+            Picasso.with(this).load(favoritesGridView.getStringExtra("image")).into(mBinding.ivFavorites);
         }
-        if (mIntentFromFavoriteMovieGridView.hasExtra("overview")) {
-            mBinding.favoriteOverviewTextView.setText(mIntentFromFavoriteMovieGridView.getStringExtra("overview"));
+        if (favoritesGridView.hasExtra("overview")) {
+            mBinding.tvFavoritesOverview.setText(favoritesGridView.getStringExtra("overview"));
         }
-        if (mIntentFromFavoriteMovieGridView.hasExtra("title")) {
-            mBinding.favoriteTitleTextView.setText(mIntentFromFavoriteMovieGridView.getStringExtra("title"));
+        if (favoritesGridView.hasExtra("title")) {
+            mBinding.tvFavoritesTitle.setText(favoritesGridView.getStringExtra("title"));
         }
-        if (mIntentFromFavoriteMovieGridView.hasExtra("date")) {
-            mBinding.favoriteReleaseDateTextView.setText(mIntentFromFavoriteMovieGridView.getStringExtra("date"));
+        if (favoritesGridView.hasExtra("date")) {
+            mBinding.tvFavoritesRelease.setText(favoritesGridView.getStringExtra("date"));
         }
-        if (mIntentFromFavoriteMovieGridView.hasExtra("rating")) {
-            mBinding.favoriteRatingTextView.setText(mIntentFromFavoriteMovieGridView.getStringExtra("rating"));
+        if (favoritesGridView.hasExtra("rating")) {
+            mBinding.tvFavoritesRating.setText(favoritesGridView.getStringExtra("rating"));
         }
     }
 }

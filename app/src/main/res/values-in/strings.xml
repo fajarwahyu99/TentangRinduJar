@@ -7,7 +7,7 @@
         <string name = "movie_release_date"> Tanggal Peluncuran Film </string>
         <string name = "movie_rating"> Peringkat Film </string>
         <string name = "nowplaying_movie"> Sekarang Diputar </string>
-        <string name = "coming_movie"> Sampai Datang </string>
+        <string name = "coming_movie"> Akan Datang </string>
         <string name = "menu_moviefavorite"> Film Favorit Saya </string>
         <string name = "menu_share"> Bagikan </string>
         <string name = "movie_review"> Ulasan </string>

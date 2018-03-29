@@ -4,24 +4,25 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
+import java.util.ArrayList;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.util.ArrayList;
+
 
 public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewViewHolder> {
-    ArrayList<String> mReviews;
-    Context mContext;
+    ArrayList<String> teksReviews;
+    Context movieContext;
 
     public ReviewAdapter(Context context, ArrayList<String> reviews) {
-        mContext = context;
-        mReviews = reviews;
+        movieContext = context;
+        teksReviews = reviews;
     }
 
     @Override
     public ReviewViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        LinearLayout itemView = (LinearLayout) LayoutInflater.from(mContext)
+        LinearLayout itemView = (LinearLayout) LayoutInflater.from(movieContext)
                 .inflate(R.layout.review_list_item, null, false);
         ReviewAdapter.ReviewViewHolder reviewViewHolder = new ReviewAdapter.ReviewViewHolder(itemView);
         return reviewViewHolder;
@@ -29,18 +30,18 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
 
     @Override
     public void onBindViewHolder(ReviewViewHolder holder, int position) {
-        String reviewContent = mReviews.get(position);
+        String reviewContent = teksReviews.get(position);
         if (reviewContent.length() != 0) {
             holder.mReviewTextView.setText(reviewContent);
         } else {
-            holder.mReviewTextView.setText(mContext.getResources().getText(R.string.empty_review_content));
+            holder.mReviewTextView.setText(movieContext.getResources().getText(R.string.empty_review_content));
         }
     }
 
     @Override
     public int getItemCount() {
-        if (mReviews != null) {
-            return mReviews.size();
+        if (teksReviews != null) {
+            return teksReviews.size();
         } else {
             return 0;
         }

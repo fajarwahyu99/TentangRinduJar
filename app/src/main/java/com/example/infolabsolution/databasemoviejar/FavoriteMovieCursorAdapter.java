@@ -27,8 +27,8 @@ public class FavoriteMovieCursorAdapter extends CursorAdapter {
 
         FrameLayout itemView = (FrameLayout) LayoutInflater.from(context)
                 .inflate(R.layout.grid_view_item, viewGroup, false);
-        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        Display display = wm.getDefaultDisplay();
+        WindowManager moviedisplay = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = moviedisplay.getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
         int width = size.x;
@@ -48,18 +48,18 @@ public class FavoriteMovieCursorAdapter extends CursorAdapter {
         final String movieOverview = cursor.getString(cursor.getColumnIndexOrThrow(MovieContract.MovieEntry.COLUMN_MOVIE_OVERVIEW));
         final String moviePoster = cursor.getString(cursor.getColumnIndexOrThrow(MovieContract.MovieEntry.COLUMN_MOVIE_POSTER));
 
-        ImageView posterImageView = (ImageView) view.findViewById(R.id.image);
-        Picasso.with(context).load(moviePoster).into(posterImageView);
-        posterImageView.setOnClickListener(new View.OnClickListener() {
+        ImageView ivPoster = (ImageView) view.findViewById(R.id.image);
+        Picasso.with(context).load(moviePoster).into(ivPoster);
+        ivPoster.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent favoriteMovieIntent = new Intent(context, FavoriteMoviesActivity.class);
-                favoriteMovieIntent.putExtra("title", movieTitle);
-                favoriteMovieIntent.putExtra("overview", movieOverview);
-                favoriteMovieIntent.putExtra("rating", movieRating);
-                favoriteMovieIntent.putExtra("date", movieReleaseDate);
-                favoriteMovieIntent.putExtra("image", moviePoster);
-                context.startActivity(favoriteMovieIntent);
+                Intent defavIntent = new Intent(context, FavoriteMoviesActivity.class);
+                defavIntent.putExtra("title", movieTitle);
+                defavIntent.putExtra("overview", movieOverview);
+                defavIntent.putExtra("rating", movieRating);
+                defavIntent.putExtra("date", movieReleaseDate);
+                defavIntent.putExtra("image", moviePoster);
+                context.startActivity(defavIntent);
             }
         });
     }

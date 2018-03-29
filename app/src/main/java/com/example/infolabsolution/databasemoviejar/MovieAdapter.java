@@ -19,24 +19,21 @@ import java.util.ArrayList;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
 
-    private static final String BASE_URL = "https://image.tmdb.org/t/p/";
-    private static final String IMAGE_SIZE = "w185";
-
-    private Context mContext;
-    private ArrayList<Movie> mMovies;
+    private Context movieContext;
+    private ArrayList<Movie> listMovies;
 
     public MovieAdapter(Context context, ArrayList<Movie> movies) {
-        mMovies = movies;
-        mContext = context;
+        listMovies = movies;
+        movieContext = context;
     }
 
     @Override
     public MovieViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        FrameLayout itemView = (FrameLayout) LayoutInflater.from(mContext)
+        FrameLayout itemView = (FrameLayout) LayoutInflater.from(movieContext)
                 .inflate(R.layout.grid_view_item, parent, false);
-        WindowManager wm = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
-        Display display = wm.getDefaultDisplay();
+        WindowManager moviedisplay = (WindowManager) movieContext.getSystemService(Context.WINDOW_SERVICE);
+        Display display = moviedisplay.getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
         int width = size.x;
@@ -45,48 +42,48 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         itemView.setPadding(2, 2, 2, 2);
         itemView.setBackgroundColor(Color.parseColor("#000000"));
 
-        MovieViewHolder movieViewHolder = new MovieViewHolder(itemView);
-        return movieViewHolder;
+        MovieViewHolder filmViewHolder = new MovieViewHolder(itemView);
+        return filmViewHolder;
     }
 
     @Override
     public void onBindViewHolder(MovieViewHolder holder, final int position) {
-        Picasso.with(mContext).load(createImageUrlString(position)).into(holder.mMovieImageView);
+        Picasso.with(movieContext).load(createImageUrlString(position)).into(holder.imgMovieImage);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent movieDetailIntent = new Intent(mContext, MovieDetailActivity.class);
-                movieDetailIntent.putExtra("title", mMovies.get(position).getMovieTitle());
-                movieDetailIntent.putExtra("overview", mMovies.get(position).getMovieOverview());
-                movieDetailIntent.putExtra("rating", mMovies.get(position).getMovieRating());
-                movieDetailIntent.putExtra("date", mMovies.get(position).getMovieReleaseDate());
-                movieDetailIntent.putExtra("image", createImageUrlString(position));
-                movieDetailIntent.putExtra("id", mMovies.get(position).getMovieId());
-                mContext.startActivity(movieDetailIntent);
+                Intent filmDetailIntent = new Intent(movieContext, MovieDetailActivity.class);
+                filmDetailIntent.putExtra("title", listMovies.get(position).getMovieTitle());
+                filmDetailIntent.putExtra("overview", listMovies.get(position).getMovieOverview());
+                filmDetailIntent.putExtra("rating", listMovies.get(position).getMovieRating());
+                filmDetailIntent.putExtra("date", listMovies.get(position).getMovieReleaseDate());
+                filmDetailIntent.putExtra("image", createImageUrlString(position));
+                filmDetailIntent.putExtra("id", listMovies.get(position).getMovieId());
+                movieContext.startActivity(filmDetailIntent);
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        if (mMovies != null) {
-            return mMovies.size();
+        if (listMovies != null) {
+            return listMovies.size();
         } else {
             return 0;
         }
     }
 
     public class MovieViewHolder extends RecyclerView.ViewHolder {
-        ImageView mMovieImageView;
+        ImageView imgMovieImage;
 
         public MovieViewHolder(FrameLayout itemView) {
             super(itemView);
-            mMovieImageView = (ImageView) itemView.findViewById(R.id.image);
+            imgMovieImage = (ImageView) itemView.findViewById(R.id.image);
         }
     }
 
     public String createImageUrlString(int ImagePosition) {
-        String imagePath = mMovies.get(ImagePosition).getMovieImage();
-        return BASE_URL + IMAGE_SIZE + imagePath;
+        String imagePath = listMovies.get(ImagePosition).getMovieImage();
+        return BuildConfig.BASE_URL + BuildConfig.IMAGE_SIZE + imagePath;
     }
 }

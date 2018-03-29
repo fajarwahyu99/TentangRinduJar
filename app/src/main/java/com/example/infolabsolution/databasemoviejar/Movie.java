@@ -1,44 +1,44 @@
 package com.example.infolabsolution.databasemoviejar;
 
 public class Movie {
-    private String mMovieTitle;
-    private String mMovieOverview;
-    private String mMovieReleaseDate;
-    private String mMovieImage;
-    private double mMovieRating;
-    private int mMovieId;
+    private String textTitle;
+    private String textOverview;
+    private String textReleaseDate;
+    private String imgMovies;
+    private double textRating;
+    private int textMovieId;
 
     public Movie(String title, String overview, String releaseDate, String image, double rating, int id) {
-        mMovieTitle = title;
-        mMovieOverview = overview;
-        mMovieReleaseDate = releaseDate;
-        mMovieImage = image;
-        mMovieRating = rating;
-        mMovieId = id;
+        textTitle = title;
+        textOverview = overview;
+        textReleaseDate = releaseDate;
+        imgMovies = image;
+        textRating = rating;
+        textMovieId = id;
     }
 
     public String getMovieTitle() {
-        return mMovieTitle;
+        return textTitle;
     }
 
     public String getMovieOverview() {
-        return mMovieOverview;
+        return textOverview;
     }
 
     public String getMovieReleaseDate() {
-        return mMovieReleaseDate;
+        return textReleaseDate;
     }
 
     public String getMovieImage() {
-        return mMovieImage;
+        return imgMovies;
     }
 
     public double getMovieRating() {
-        return mMovieRating;
+        return textRating;
     }
 
     public int getMovieId() {
-        return mMovieId;
+        return textMovieId;
     }
 
 }

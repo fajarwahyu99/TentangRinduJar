@@ -10,27 +10,27 @@ import android.net.Uri;
 import com.example.infolabsolution.databasemoviejar.MovieContract.*;
 
 public class MoviesProvider extends ContentProvider{
-
+    private MovieDbHelper movieDBHelper;
     private static final int MOVIES = 200;
     private static final int MOVIE_ID = 201;
     private static final UriMatcher sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
     static {
-        sUriMatcher.addURI(MovieContract.CONTENT_AUTHORITY, MovieContract.PATH_MOVIES, MOVIES);
-        sUriMatcher.addURI(MovieContract.CONTENT_AUTHORITY, MovieContract.PATH_MOVIES + "/#", MOVIE_ID);
+        sUriMatcher.addURI(BuildConfig.AUTHORITY, MovieContract.PATH_MOVIES, MOVIES);
+        sUriMatcher.addURI(BuildConfig.AUTHORITY, MovieContract.PATH_MOVIES + "/#", MOVIE_ID);
     }
 
-    private MovieDbHelper mMovieDbHelper;
+
 
     @Override
     public boolean onCreate() {
-        mMovieDbHelper = new MovieDbHelper(getContext());
+        movieDBHelper = new MovieDbHelper(getContext());
         return true;
     }
 
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
-        SQLiteDatabase database = mMovieDbHelper.getReadableDatabase();
+        SQLiteDatabase database = movieDBHelper.getReadableDatabase();
         Cursor cursor;
         int match = sUriMatcher.match(uri);
         switch (match) {
@@ -68,7 +68,7 @@ public class MoviesProvider extends ContentProvider{
     }
 
     private Uri insertMovie(Uri uri, ContentValues contentValues) {
-        SQLiteDatabase database = mMovieDbHelper.getWritableDatabase();
+        SQLiteDatabase database = movieDBHelper.getWritableDatabase();
         long id = database.insert(MovieEntry.TABLE_NAME, null, contentValues);
 
         if (id == -1) {
@@ -82,24 +82,24 @@ public class MoviesProvider extends ContentProvider{
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
-        int rowsDeleted;
-        SQLiteDatabase database = mMovieDbHelper.getWritableDatabase();
+        int rowGone;
+        SQLiteDatabase database = movieDBHelper.getWritableDatabase();
         int match = sUriMatcher.match(uri);
         switch (match) {
             case MOVIES:
-                rowsDeleted = database.delete(MovieEntry.TABLE_NAME, selection, selectionArgs);
-                if (rowsDeleted != 0) {
+                rowGone = database.delete(MovieEntry.TABLE_NAME, selection, selectionArgs);
+                if (rowGone != 0) {
                     getContext().getContentResolver().notifyChange(uri, null);
                 }
-                return rowsDeleted;
+                return rowGone;
             case MOVIE_ID:
                 selection = MovieEntry._ID + "=?";
                 selectionArgs = new String[] {String.valueOf(ContentUris.parseId(uri))};
-                rowsDeleted = database.delete(MovieEntry.TABLE_NAME, selection, selectionArgs);
-                if (rowsDeleted != 0) {
+                rowGone = database.delete(MovieEntry.TABLE_NAME, selection, selectionArgs);
+                if (rowGone != 0) {
                     getContext().getContentResolver().notifyChange(uri, null);
                 }
-                return rowsDeleted;
+                return rowGone;
             default:
                 throw new IllegalArgumentException("Deletion is not supported for " + uri);
         }

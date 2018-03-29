@@ -3,20 +3,18 @@ package com.example.infolabsolution.databasemoviejar;
 import android.util.Log;
 
 import com.example.infolabsolution.databasemoviejar.Movie;
-
+import static com.example.infolabsolution.databasemoviejar.MainActivity.LOG_TAG;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import static com.example.infolabsolution.databasemoviejar.MainActivity.LOG_TAG;
 
 public class NetworkUtils {
 

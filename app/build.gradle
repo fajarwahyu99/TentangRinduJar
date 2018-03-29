@@ -1,14 +1,20 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 26
+    compileSdkVersion 25
     defaultConfig {
         applicationId "com.example.infolabsolution.databasemoviejar"
         minSdkVersion 17
-        targetSdkVersion 26
+        targetSdkVersion 25
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        it.buildConfigField 'String', 'TMDB_NOWPLAYING_URL', "\"http://api.themoviedb.org/3/movie/now_playing?api_key=92fc8095e11194d676367347621d94c0\""
+        it.buildConfigField 'String', 'TMDB_UPCOMING_URL', "\"http://api.themoviedb.org/3/movie/upcoming?api_key=92fc8095e11194d676367347621d94c0\""
+        it.buildConfigField 'String', 'BASE_URL', "\"https://image.tmdb.org/t/p/\""
+        it.buildConfigField 'String', 'IMAGE_SIZE', "\"w185\""
+        it.buildConfigField 'String', 'DATABASE_NAME', "\"moviefilm.db\""
+        it.buildConfigField 'String', 'AUTHORITY', "\"com.example.infolabsolution.databasemoviejar\""
     }
     buildTypes {
         release {

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.example.android.popularmovies.MovieDetailActivity">
+    tools:context="com.example.infolabsolution.databasemoviejar.MovieDetailActivity">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -18,40 +18,40 @@
                 android:layout_marginTop="5dp">
 
                 <ImageView
-                    android:id="@+id/movieImageView"
+                    android:id="@+id/ivMoviess"
                     android:layout_width="180dp"
                     android:layout_height="match_parent"
                     android:paddingLeft="5dp" />
 
                 <TextView
-                    android:id="@+id/movieTitleTextView"
+                    android:id="@+id/tvmovieTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="20dp"
-                    android:layout_toRightOf="@+id/movieImageView"
+                    android:layout_toRightOf="@+id/ivMoviess"
                     android:textSize="20sp"
                     tools:text="@string/movie_title" />
 
                 <TextView
-                    android:id="@+id/movieRatingTextView"
+                    android:id="@+id/tvmovieRating"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/movieTitleTextView"
+                    android:layout_below="@+id/tvmovieTitle"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="20dp"
-                    android:layout_toRightOf="@+id/movieImageView"
+                    android:layout_toRightOf="@+id/ivMoviess"
                     android:textSize="16sp"
                     tools:text="@string/movie_rating" />
 
                 <TextView
-                    android:id="@+id/movieRelaseDateTextView"
+                    android:id="@+id/tvmovieRelease"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/movieRatingTextView"
+                    android:layout_below="@+id/tvmovieRating"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="20dp"
-                    android:layout_toRightOf="@+id/movieImageView"
+                    android:layout_toRightOf="@+id/ivMoviess"
                     android:textSize="16sp"
                     tools:text="@string/movie_release_date" />
 
@@ -70,7 +70,7 @@
             </RelativeLayout>
 
             <TextView
-                android:id="@+id/movieOverviewTextView"
+                android:id="@+id/tvmovieOverview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="5dp"

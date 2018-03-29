@@ -31,23 +31,19 @@ import static com.example.infolabsolution.databasemoviejar.NetworkUtils.getRespo
 public class MainActivity extends AppCompatActivity {
 
     public static final String LOG_TAG = MainActivity.class.getSimpleName();
-    private static final String TMDB_POPULAR_MOVIE_REQUEST_URL =
-            "http://api.themoviedb.org/3/movie/now_playing?api_key=92fc8095e11194d676367347621d94c0";
-    private static final String TMDB_TOP_RATED_MOVIE_REQUEST_URL =
-            "http://api.themoviedb.org/3/movie/upcoming?api_key=92fc8095e11194d676367347621d94c0";
     public MovieAdapter movieAdapter;
-    public MovieAdapter topRatedMovieAdapter;
+    public MovieAdapter upcomingMovieAdapter;
     public RecyclerView movieGridView;
-    public GridView mFavoriteMovieGridView;
-    public ArrayList<Movie> mMovies;
-    public ArrayList<Movie> mTopRatedMovies;
-    public MovieParcelable mTopRatedMoviesParcelable;
-    public MovieParcelable mPopularMovieParcelable;
-    public MovieParcelable mFavoriteMovieParcelable;
-    public ArrayList<MovieParcelable> mTopRatedMoviesParcelableArrayList;
-    public ArrayList<MovieParcelable> mPopularMovieParcelableArrayList;
-    public ArrayList<MovieParcelable> mFavoriteMovieParcelableArrayList;
-    public FavoriteMovieCursorAdapter mAdapter;
+    public GridView gvFavoriteMovie;
+    public ArrayList<Movie> listMovies;
+    public ArrayList<Movie> listupcomingMovies;
+    public MovieParcelable upcomingParcelable;
+    public MovieParcelable nowplayingParcelable;
+    public MovieParcelable favoriteParcelable;
+    public ArrayList<MovieParcelable> listupcomingParcelable;
+    public ArrayList<MovieParcelable> listnowplayingParcelable;
+    public ArrayList<MovieParcelable> listfavoriteParcelable;
+    public FavoriteMovieCursorAdapter favAdapter;
     private static final int FAVORITE_MOVIE_LOADER = 0;
 
     @Override
@@ -64,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
                     Toast.LENGTH_LONG).show();
         }
 
-        mAdapter = new FavoriteMovieCursorAdapter(this, null);
+        favAdapter = new FavoriteMovieCursorAdapter(this, null);
 
         movieGridView = (RecyclerView) findViewById(R.id.movie_recycler_view);
         movieGridView.setHasFixedSize(true);
@@ -74,24 +70,24 @@ public class MainActivity extends AppCompatActivity {
         movieGridView.setLayoutManager(gridLayoutManager);
 
         if (savedInstanceState != null && savedInstanceState.getParcelableArrayList("key") != null) {
-            TopMovieForParcelableAsyncTask taskForMovieParcelable = new TopMovieForParcelableAsyncTask();
+            UpMovieForParcelableAsyncTask taskForMovieParcelable = new UpMovieForParcelableAsyncTask();
             taskForMovieParcelable.execute();
-            TopRatedMovieAsyncTask taskTopMovieAsync = new TopRatedMovieAsyncTask();
-            taskTopMovieAsync.execute();
+            UpComingMovieAsyncTask taskUpMovieAsync = new UpComingMovieAsyncTask();
+            taskUpMovieAsync.execute();
 
-        } else if (savedInstanceState != null && savedInstanceState.getParcelableArrayList("popular_key") != null) {
+        } else if (savedInstanceState != null && savedInstanceState.getParcelableArrayList("nowplaying_key") != null) {
             MovieForParcelableAsyncTask taskForMovieParcelable = new MovieForParcelableAsyncTask();
             taskForMovieParcelable.execute();
-            MovieAsyncTask taskPopularMovieAsync = new MovieAsyncTask();
-            taskPopularMovieAsync.execute();
+            MovieAsyncTask taskNowPlayingAsync = new MovieAsyncTask();
+            taskNowPlayingAsync.execute();
         } else if (savedInstanceState != null && savedInstanceState.getParcelableArrayList("favorite_key") != null) {
             Cursor cursor = getContentResolver().query(MovieContract.MovieEntry.CONTENT_URI, null, null, null, null, null);
-            mAdapter = new FavoriteMovieCursorAdapter(this, cursor);
+            favAdapter = new FavoriteMovieCursorAdapter(this, cursor);
             movieGridView.setVisibility(View.INVISIBLE);
-            mFavoriteMovieGridView = (GridView) findViewById(R.id.favoriteMovieGridView);
-            mFavoriteMovieGridView.setVisibility(View.VISIBLE);
-            mFavoriteMovieGridView.setNumColumns(3);
-            mFavoriteMovieGridView.setAdapter(mAdapter);
+            gvFavoriteMovie = (GridView) findViewById(R.id.favoriteMovieGridView);
+            gvFavoriteMovie.setVisibility(View.VISIBLE);
+            gvFavoriteMovie.setNumColumns(3);
+            gvFavoriteMovie.setAdapter(favAdapter);
             getFavoriteMovies(cursor);
         } else {
             MovieAsyncTask task = new MovieAsyncTask();
@@ -103,19 +99,19 @@ public class MainActivity extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        outState.putParcelableArrayList("key", mTopRatedMoviesParcelableArrayList);
-        outState.putParcelableArrayList("popular_key", mPopularMovieParcelableArrayList);
-        outState.putParcelableArrayList("favorite_key", mFavoriteMovieParcelableArrayList);
+        outState.putParcelableArrayList("key", listupcomingParcelable);
+        outState.putParcelableArrayList("nowplaying_key", listnowplayingParcelable);
+        outState.putParcelableArrayList("favorite_key", listfavoriteParcelable);
     }
 
     private class MovieAsyncTask extends AsyncTask<URL, Void, ArrayList<Movie>> {
 
         @Override
         protected ArrayList<Movie> doInBackground(URL... urls) {
-            URL popularMovieUrl = createUrl(TMDB_POPULAR_MOVIE_REQUEST_URL);
+            URL playMovieUrl = createUrl(BuildConfig.TMDB_NOWPLAYING_URL);
             String jsonResponse = " ";
             try {
-                jsonResponse = getResponseFromHttpUrl(popularMovieUrl);
+                jsonResponse = getResponseFromHttpUrl(playMovieUrl);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -125,20 +121,20 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(final ArrayList<Movie> movies) {
-            mMovies = movies;
-            movieAdapter = new MovieAdapter(MainActivity.this, mMovies);
+            listMovies = movies;
+            movieAdapter = new MovieAdapter(MainActivity.this, listMovies);
             movieGridView.setAdapter(movieAdapter);
         }
     }
 
-    private class TopRatedMovieAsyncTask extends AsyncTask<URL, Void, ArrayList<Movie>> {
+    private class UpComingMovieAsyncTask extends AsyncTask<URL, Void, ArrayList<Movie>> {
 
         @Override
         protected ArrayList<Movie> doInBackground(URL... urls) {
-            URL topRatedMovieUrl = createUrl(TMDB_TOP_RATED_MOVIE_REQUEST_URL);
+            URL upComingMovieUrl = createUrl(BuildConfig.TMDB_UPCOMING_URL);
             String jsonResponse = " ";
             try {
-                jsonResponse = getResponseFromHttpUrl(topRatedMovieUrl);
+                jsonResponse = getResponseFromHttpUrl(upComingMovieUrl);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -148,9 +144,9 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(final ArrayList<Movie> movies) {
-            mTopRatedMovies = movies;
-            topRatedMovieAdapter = new MovieAdapter(MainActivity.this, mTopRatedMovies);
-            movieGridView.setAdapter(topRatedMovieAdapter);
+            listupcomingMovies = movies;
+            upcomingMovieAdapter = new MovieAdapter(MainActivity.this, listupcomingMovies);
+            movieGridView.setAdapter(upcomingMovieAdapter);
         }
     }
 
@@ -158,10 +154,10 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected ArrayList<Movie> doInBackground(URL... urls) {
-            URL popularMovieUrl = createUrl(TMDB_POPULAR_MOVIE_REQUEST_URL);
+            URL playMovieUrl = createUrl(BuildConfig.TMDB_NOWPLAYING_URL);
             String jsonResponse = " ";
             try {
-                jsonResponse = getResponseFromHttpUrl(popularMovieUrl);
+                jsonResponse = getResponseFromHttpUrl(playMovieUrl);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -173,28 +169,28 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(final ArrayList<Movie> movies) {
             if (movies != null && !movies.isEmpty()) {
                 for (int i = 0; i < movies.size(); i++) {
-                    mPopularMovieParcelable = new MovieParcelable
+                    nowplayingParcelable = new MovieParcelable
                             (movies.get(i).getMovieTitle(),
                                     movies.get(i).getMovieOverview(),
                                     movies.get(i).getMovieReleaseDate(),
                                     movies.get(i).getMovieImage(),
                                     movies.get(i).getMovieRating(),
                                     movies.get(i).getMovieId());
-                    mPopularMovieParcelableArrayList = new ArrayList<>();
-                    mPopularMovieParcelableArrayList.add(mTopRatedMoviesParcelable);
+                    listnowplayingParcelable = new ArrayList<>();
+                    listnowplayingParcelable.add(upcomingParcelable);
                 }
             }
         }
     }
 
-    private class TopMovieForParcelableAsyncTask extends AsyncTask<URL, Void, ArrayList<Movie>> {
+    private class UpMovieForParcelableAsyncTask extends AsyncTask<URL, Void, ArrayList<Movie>> {
 
         @Override
         protected ArrayList<Movie> doInBackground(URL... urls) {
-            URL popularMovieUrl = createUrl(TMDB_TOP_RATED_MOVIE_REQUEST_URL);
+            URL playMovieUrl = createUrl(BuildConfig.TMDB_UPCOMING_URL);
             String jsonResponse = " ";
             try {
-                jsonResponse = getResponseFromHttpUrl(popularMovieUrl);
+                jsonResponse = getResponseFromHttpUrl(playMovieUrl);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -206,15 +202,15 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(final ArrayList<Movie> movies) {
             if (movies != null && !movies.isEmpty()) {
                 for (int i = 0; i < movies.size(); i++) {
-                    mTopRatedMoviesParcelable = new MovieParcelable
+                    upcomingParcelable = new MovieParcelable
                             (movies.get(i).getMovieTitle(),
                                     movies.get(i).getMovieOverview(),
                                     movies.get(i).getMovieReleaseDate(),
                                     movies.get(i).getMovieImage(),
                                     movies.get(i).getMovieRating(),
                                     movies.get(i).getMovieId());
-                    mTopRatedMoviesParcelableArrayList = new ArrayList<>();
-                    mTopRatedMoviesParcelableArrayList.add(mTopRatedMoviesParcelable);
+                    listupcomingParcelable = new ArrayList<>();
+                    listupcomingParcelable.add(upcomingParcelable);
                 }
             }
         }
@@ -229,29 +225,29 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemThatWasClickedId = item.getItemId();
-        MovieAsyncTask taskForReloadingPopularMovies = new MovieAsyncTask();
-        TopRatedMovieAsyncTask taskForTopRatedMovies = new TopRatedMovieAsyncTask();
-        mFavoriteMovieGridView = (GridView) findViewById(R.id.favoriteMovieGridView);
+        MovieAsyncTask taskForReloadingPlayMovies = new MovieAsyncTask();
+        UpComingMovieAsyncTask taskUpComingMovies = new UpComingMovieAsyncTask();
+        gvFavoriteMovie = (GridView) findViewById(R.id.favoriteMovieGridView);
 
 
         if (itemThatWasClickedId == R.id.action_now_playing) {
-            mTopRatedMoviesParcelableArrayList = null;
-            mFavoriteMovieParcelableArrayList = null;
-            mFavoriteMovieGridView.setVisibility(View.INVISIBLE);
+            listupcomingParcelable = null;
+            listfavoriteParcelable = null;
+            gvFavoriteMovie.setVisibility(View.INVISIBLE);
             movieGridView.setVisibility(View.VISIBLE);
-            taskForReloadingPopularMovies.execute();
-            MovieForParcelableAsyncTask taskForPopularMovieParcelable = new MovieForParcelableAsyncTask();
-            taskForPopularMovieParcelable.execute();
+            taskForReloadingPlayMovies.execute();
+            MovieForParcelableAsyncTask taskForPlayMovieParcelable = new MovieForParcelableAsyncTask();
+            taskForPlayMovieParcelable.execute();
             return true;
         }
 
         if (itemThatWasClickedId == R.id.action_up_coming) {
-            mPopularMovieParcelableArrayList = null;
-            mFavoriteMovieParcelableArrayList = null;
-            mFavoriteMovieGridView.setVisibility(View.INVISIBLE);
+            listnowplayingParcelable = null;
+            listfavoriteParcelable = null;
+            gvFavoriteMovie.setVisibility(View.INVISIBLE);
             movieGridView.setVisibility(View.VISIBLE);
-            taskForTopRatedMovies.execute();
-            TopMovieForParcelableAsyncTask taskForMovieParcelable = new TopMovieForParcelableAsyncTask();
+            taskUpComingMovies.execute();
+            UpMovieForParcelableAsyncTask taskForMovieParcelable = new UpMovieForParcelableAsyncTask();
             taskForMovieParcelable.execute();
             return true;
         }
@@ -262,14 +258,14 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (itemThatWasClickedId == R.id.action_favorite) {
-            mTopRatedMoviesParcelableArrayList = null;
-            mPopularMovieParcelableArrayList = null;
+            listupcomingParcelable = null;
+            listnowplayingParcelable = null;
             Cursor cursor = getContentResolver().query(MovieContract.MovieEntry.CONTENT_URI, null, null, null, null, null);
-            mAdapter = new FavoriteMovieCursorAdapter(this, cursor);
+            favAdapter = new FavoriteMovieCursorAdapter(this, cursor);
             movieGridView.setVisibility(View.INVISIBLE);
-            mFavoriteMovieGridView.setVisibility(View.VISIBLE);
-            mFavoriteMovieGridView.setNumColumns(3);
-            mFavoriteMovieGridView.setAdapter(mAdapter);
+            gvFavoriteMovie.setVisibility(View.VISIBLE);
+            gvFavoriteMovie.setNumColumns(3);
+            gvFavoriteMovie.setAdapter(favAdapter);
             getFavoriteMovies(cursor);
         }
         return super.onOptionsItemSelected(item);
@@ -279,18 +275,18 @@ public class MainActivity extends AppCompatActivity {
         if (cursor != null && cursor.getCount() != 0) {
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
-                mFavoriteMovieParcelable = new MovieParcelable(
+                favoriteParcelable = new MovieParcelable(
                         cursor.getString(cursor.getColumnIndexOrThrow(MovieContract.MovieEntry.COLUMN_MOVIE_NAME)),
                         cursor.getString(cursor.getColumnIndexOrThrow(MovieContract.MovieEntry.COLUMN_MOVIE_OVERVIEW)),
                         cursor.getString(cursor.getColumnIndexOrThrow(MovieContract.MovieEntry.COLUMN_MOVIE_DATE)),
                         cursor.getString(cursor.getColumnIndexOrThrow(MovieContract.MovieEntry.COLUMN_MOVIE_POSTER)),
                         Double.parseDouble(cursor.getString(cursor.getColumnIndexOrThrow(MovieContract.MovieEntry.COLUMN_MOVIE_RATING))),
                         Integer.parseInt(cursor.getString(cursor.getColumnIndexOrThrow(MovieContract.MovieEntry.COLUMN_MOVIE_ID))));
-                mFavoriteMovieParcelableArrayList = new ArrayList<>();
-                mFavoriteMovieParcelableArrayList.add(mFavoriteMovieParcelable);
+                listfavoriteParcelable = new ArrayList<>();
+                listfavoriteParcelable.add(favoriteParcelable);
                 cursor.moveToNext();
             }
         }
-        return mFavoriteMovieParcelableArrayList;
+        return listfavoriteParcelable;
     }
 }

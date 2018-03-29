@@ -6,8 +6,7 @@ import android.provider.BaseColumns;
 public class MovieContract {
     private MovieContract() {}
 
-    public static final String CONTENT_AUTHORITY = "com.example.infolabsolution.databasemoviejar";
-    public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
+    public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + BuildConfig.AUTHORITY);
     public static final String PATH_MOVIES = "movies";
 
     public static final class MovieEntry implements BaseColumns {

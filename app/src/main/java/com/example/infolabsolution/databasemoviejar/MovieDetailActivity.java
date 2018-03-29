@@ -8,6 +8,10 @@ import android.database.Cursor;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.AsyncTask;
+
+import com.example.infolabsolution.databasemoviejar.MovieContract.MovieEntry;
+import com.example.infolabsolution.databasemoviejar.databinding.ActivityMovieDetailBinding;
+import com.squareup.picasso.Picasso;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AlertDialog;
@@ -15,83 +19,75 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.ShareActionProvider;
+import static com.example.infolabsolution.databasemoviejar.NetworkUtils.createUrl;
+import static com.example.infolabsolution.databasemoviejar.NetworkUtils.extractReviewFromJson;
+import static com.example.infolabsolution.databasemoviejar.NetworkUtils.getResponseFromHttpUrl;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
-
-import com.example.infolabsolution.databasemoviejar.MovieContract.MovieEntry;
-import com.example.infolabsolution.databasemoviejar.databinding.ActivityMovieDetailBinding;
-import com.squareup.picasso.Picasso;
-
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 
-import static com.example.infolabsolution.databasemoviejar.NetworkUtils.createUrl;
-import static com.example.infolabsolution.databasemoviejar.NetworkUtils.extractReviewFromJson;
-import static com.example.infolabsolution.databasemoviejar.NetworkUtils.getResponseFromHttpUrl;
 
 public class MovieDetailActivity extends AppCompatActivity {
 
-    String trailerUrlString;
-    String reviewUrlString;
-    ImageButton mFavoriteImageButton;
-    RecyclerView trailerListView, reviewListView;
-
-    int mId, mMovieQueryId;
-    Intent intentFromMainActivity;
-    int mFavoriteButtonUnclicked = R.drawable.favorite_white_24px;
-    int mFavoriteButtonClicked = R.drawable.favorite_border_white_24px;
-    public ShareActionProvider mShareActionProvider;
+    String reviewStringUrl;
+    ImageButton imgbuttonFavorite;
+    public ShareActionProvider btnShare;
     ActivityMovieDetailBinding mBinding;
+    RecyclerView reviewListView;
+    int btnFavoriteUnclicked = R.drawable.favorite_white_24px;
+    int btnFavoriteClicked = R.drawable.favorite_border_white_24px;
+    int mId, querymId;
+    Intent detailmovieIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_detail);
-        intentFromMainActivity = getIntent();
+        detailmovieIntent = getIntent();
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_movie_detail);
 
-        mFavoriteImageButton = (ImageButton) findViewById(R.id.favoriteButton);
+        imgbuttonFavorite = (ImageButton) findViewById(R.id.favoriteButton);
 
-        if (intentFromMainActivity.hasExtra("image")) {
-            Picasso.with(this).load(intentFromMainActivity.getStringExtra("image")).into(mBinding.movieImageView);
+        if (detailmovieIntent.hasExtra("image")) {
+            Picasso.with(this).load(detailmovieIntent.getStringExtra("image")).into(mBinding.ivMoviess);
         }
-        if (intentFromMainActivity.hasExtra("overview")) {
-            mBinding.movieOverviewTextView.setText(intentFromMainActivity.getStringExtra("overview"));
+        if (detailmovieIntent.hasExtra("overview")) {
+            mBinding.tvmovieOverview.setText(detailmovieIntent.getStringExtra("overview"));
         }
-        if (intentFromMainActivity.hasExtra("title")) {
-            mBinding.movieTitleTextView.setText(intentFromMainActivity.getStringExtra("title"));
+        if (detailmovieIntent.hasExtra("title")) {
+            mBinding.tvmovieTitle.setText(detailmovieIntent.getStringExtra("title"));
         }
-        if (intentFromMainActivity.hasExtra("date")) {
-            mBinding.movieRelaseDateTextView.setText(intentFromMainActivity.getStringExtra("date"));
+        if (detailmovieIntent.hasExtra("date")) {
+            mBinding.tvmovieRelease.setText(detailmovieIntent.getStringExtra("date"));
         }
-        if (intentFromMainActivity.hasExtra("rating")) {
-            mBinding.movieRatingTextView.setText(String.valueOf(intentFromMainActivity.getDoubleExtra("rating", 0)));
+        if (detailmovieIntent.hasExtra("rating")) {
+            mBinding.tvmovieRating.setText(String.valueOf(detailmovieIntent.getDoubleExtra("rating", 0)));
         }
-        if (intentFromMainActivity.hasExtra("id")) {
-            mId = intentFromMainActivity.getIntExtra("id", 0);
-            trailerUrlString = "http://api.themoviedb.org/3/movie/" + mId + "/videos?api_key=ebe6a24ac98297fa4742321132579ced";
-            reviewUrlString = "http://api.themoviedb.org/3/movie/" + mId + "/reviews?api_key=ebe6a24ac98297fa4742321132579ced";
+        if (detailmovieIntent.hasExtra("id")) {
+            mId = detailmovieIntent.getIntExtra("id", 0);
+            reviewStringUrl = "http://api.themoviedb.org/3/movie/" + mId + "/reviews?api_key=92fc8095e11194d676367347621d94c0";
             ReviewAsyncTask taskForReview = new ReviewAsyncTask();
             taskForReview.execute();
         }
 
         Cursor favoriteMovieCursor = getContentResolver().query(MovieEntry.CONTENT_URI, null, null, null, null, null);
-        mFavoriteImageButton.setImageResource(mFavoriteButtonUnclicked);
-        mFavoriteImageButton.setTag(mFavoriteButtonUnclicked);
+        imgbuttonFavorite.setImageResource(btnFavoriteUnclicked);
+        imgbuttonFavorite.setTag(btnFavoriteUnclicked);
         if (favoriteMovieCursor != null) {
             favoriteMovieCursor.moveToFirst();
             try {
                 while (!favoriteMovieCursor.isAfterLast()) {
-                    mMovieQueryId = favoriteMovieCursor.getInt(favoriteMovieCursor.getColumnIndexOrThrow("id"));
-                    if (mMovieQueryId != mId) {
+                    querymId = favoriteMovieCursor.getInt(favoriteMovieCursor.getColumnIndexOrThrow("id"));
+                    if (querymId != mId) {
                         favoriteMovieCursor.moveToNext();
                     } else {
-                        mFavoriteImageButton.setImageResource(mFavoriteButtonClicked);
-                        mFavoriteImageButton.setTag(mFavoriteButtonClicked);
+                        imgbuttonFavorite.setImageResource(btnFavoriteClicked);
+                        imgbuttonFavorite.setTag(btnFavoriteClicked);
                         break;
                     }
                 }
@@ -100,27 +96,27 @@ public class MovieDetailActivity extends AppCompatActivity {
             }
         }
 
-        mFavoriteImageButton.setOnClickListener(new View.OnClickListener() {
+        imgbuttonFavorite.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
                 Uri newUri;
 
-                if (Integer.parseInt(mFavoriteImageButton.getTag().toString()) == mFavoriteButtonUnclicked) {
+                if (Integer.parseInt(imgbuttonFavorite.getTag().toString()) == btnFavoriteUnclicked) {
                     ContentValues values = new ContentValues();
-                    values.put(MovieEntry.COLUMN_MOVIE_NAME, intentFromMainActivity.getStringExtra("title"));
-                    values.put(MovieEntry.COLUMN_MOVIE_POSTER, intentFromMainActivity.getStringExtra("image"));
-                    values.put(MovieEntry.COLUMN_MOVIE_RATING, String.valueOf(intentFromMainActivity.getDoubleExtra("rating", 0)));
-                    values.put(MovieEntry.COLUMN_MOVIE_DATE, intentFromMainActivity.getStringExtra("date"));
-                    values.put(MovieEntry.COLUMN_MOVIE_OVERVIEW, intentFromMainActivity.getStringExtra("overview"));
-                    values.put(MovieEntry.COLUMN_MOVIE_ID, intentFromMainActivity.getIntExtra("id", 0));
+                    values.put(MovieEntry.COLUMN_MOVIE_NAME, detailmovieIntent.getStringExtra("title"));
+                    values.put(MovieEntry.COLUMN_MOVIE_POSTER, detailmovieIntent.getStringExtra("image"));
+                    values.put(MovieEntry.COLUMN_MOVIE_RATING, String.valueOf(detailmovieIntent.getDoubleExtra("rating", 0)));
+                    values.put(MovieEntry.COLUMN_MOVIE_DATE, detailmovieIntent.getStringExtra("date"));
+                    values.put(MovieEntry.COLUMN_MOVIE_OVERVIEW, detailmovieIntent.getStringExtra("overview"));
+                    values.put(MovieEntry.COLUMN_MOVIE_ID, detailmovieIntent.getIntExtra("id", 0));
                     newUri = getContentResolver().insert(MovieEntry.CONTENT_URI, values);
                     if (newUri == null) {
                         Toast.makeText(getApplicationContext(), getString(R.string.add_favorite_fail_message),
                                 Toast.LENGTH_SHORT).show();
                     } else {
-                        mFavoriteImageButton.setImageResource(mFavoriteButtonClicked);
-                        mFavoriteImageButton.setTag(mFavoriteButtonClicked);
+                        imgbuttonFavorite.setImageResource(btnFavoriteClicked);
+                        imgbuttonFavorite.setTag(btnFavoriteClicked);
                         Toast.makeText(getApplicationContext(), getString(R.string.add_favorite_success_message),
                                 Toast.LENGTH_SHORT).show();
                     }
@@ -154,19 +150,19 @@ public class MovieDetailActivity extends AppCompatActivity {
 
     private void showDeleteConfirmationDialog(final Uri uri) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Delete this movie?");
+        builder.setMessage("Serious Delete this movie?");
         builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int id) {
                 if (uri != null) {
-                    int rowsDeleted = getContentResolver().delete(uri, null, null);
-                    if (rowsDeleted == 0) {
-                        Toast.makeText(getApplicationContext(), "Error with deleting movie",
+                    int rowGone = getContentResolver().delete(uri, null, null);
+                    if (rowGone == 0) {
+                        Toast.makeText(getApplicationContext(), "ERROR DELETING",
                                 Toast.LENGTH_SHORT).show();
                     } else {
-                        mFavoriteImageButton.setImageResource(mFavoriteButtonUnclicked);
-                        mFavoriteImageButton.setTag(mFavoriteButtonUnclicked);
-                        Toast.makeText(getApplicationContext(), "Movie deleted",
+                        imgbuttonFavorite.setImageResource(btnFavoriteUnclicked);
+                        imgbuttonFavorite.setTag(btnFavoriteUnclicked);
+                        Toast.makeText(getApplicationContext(), "FAVORITE DELETED",
                                 Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -191,7 +187,7 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         @Override
         protected ArrayList<String> doInBackground(URL... urls) {
-            URL reviewUrl = createUrl(reviewUrlString);
+            URL reviewUrl = createUrl(reviewStringUrl);
             String jsonResponse = " ";
             try {
                 jsonResponse = getResponseFromHttpUrl(reviewUrl);
@@ -216,10 +212,10 @@ public class MovieDetailActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.share_menu, menu);
         MenuItem item = menu.findItem(R.id.menu_item_share);
-        mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(item);
-        Intent myShareIntent = new Intent(Intent.ACTION_SEND);
-        myShareIntent.setType("text/plain");
-        mShareActionProvider.setShareIntent(myShareIntent);
+        btnShare = (ShareActionProvider) MenuItemCompat.getActionProvider(item);
+        Intent sIntent = new Intent(Intent.ACTION_SEND);
+        sIntent.setType("text/plain");
+        btnShare.setShareIntent(sIntent);
         return true;
     }
 }
